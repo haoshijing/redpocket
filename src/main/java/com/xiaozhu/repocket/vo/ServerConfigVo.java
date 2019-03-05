@@ -1,11 +1,15 @@
-package com.xiaozhu.repocket.controller.response;
+package com.xiaozhu.repocket.vo;
 
 import lombok.Data;
+import lombok.ToString;
+
+import javax.persistence.Table;
 
 @Data
-public class SeverConfigVo {
-    private String address;
-    private String version;
+@ToString
+public class ServerConfigVo {
+    private String Address;
+    private String Version;
     private String updateMessage;
     private String notice;
     private String scrollMessage;
@@ -15,7 +19,7 @@ public class SeverConfigVo {
     private String soundDownLoadUrl;
     private String wXShareUrl;
     private String resourceDownLoadUrl;
-    private Integer createDefaultMoney;
+    private Integer CreateDefaultMoney;
     private Integer onlineCount;
     private Integer registerCount;
 }
