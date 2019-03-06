@@ -8,13 +8,13 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-public class ConfigControllerTest extends BaseApiTest{
+public class ConfigControllerTest extends BaseApiTest {
 
     @Autowired
     private ConfigController configController;
 
     @Test
-    public void testShow(){
+    public void testShow() {
         ApiResponse<ServerConfigVo> apiResponse = configController.queryConfig();
 
         Assert.assertTrue(apiResponse.getCode() == 200);
@@ -24,9 +24,10 @@ public class ConfigControllerTest extends BaseApiTest{
 
 
     @Test
-    public void testSetConfig(){
+    public void testSetConfig() {
         ServerConfigVo serverConfigVo = new ServerConfigVo();
-        serverConfigVo.setCreateDefaultMoney(300);
+        serverConfigVo.setCreateDefaultMoney(500);
+        serverConfigVo.setAddress("http://www.baidu.com");
         ApiResponse<Boolean> apiResponse = configController.setConfig(serverConfigVo);
 
         Assert.assertTrue(apiResponse.getCode() == 200);

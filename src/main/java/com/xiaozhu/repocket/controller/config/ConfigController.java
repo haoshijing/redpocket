@@ -29,34 +29,34 @@ public class ConfigController {
     private String queryServerHost;
 
     @PostMapping("/show")
-    public ApiResponse<ServerConfigVo> queryConfig(){
+    public ApiResponse<ServerConfigVo> queryConfig() {
         final String requestUrl =
                 new StringBuilder(queryServerHost).append("/query_serverdata").toString();
         try {
-            String result = httpClient.POST(requestUrl).send().getContentAsString();
-            BaseRemoteData<List<ServerConfigVo>>  baseRemoteData = JSON.parseObject(result,BaseRemoteData.class);
-            if(baseRemoteData != null && baseRemoteData.getCode() == 0){
-                if(baseRemoteData.getData().size() > 0 ){
+            String result = httpClient.GET(requestUrl).getContentAsString();
+            BaseRemoteData<List<ServerConfigVo>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
+            if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
+                if (baseRemoteData.getData().size() > 0) {
                     return new ApiResponse<>(baseRemoteData.getData().get(0));
                 }
             }
-        }catch (Exception e){
-            log.error("",e);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return new ApiResponse<>();
     }
 
 
     @PostMapping("/setConfig")
-    public ApiResponse<Boolean> setConfig(@RequestBody ServerConfigVo configVo){
-        try{
+    public ApiResponse<Boolean> setConfig(@RequestBody ServerConfigVo configVo) {
+        try {
             final String requestUrl =
                     new StringBuilder(queryServerHost).append("/modify_serverdata").toString();
-            String result = httpClient.POST(requestUrl).content(new BytesContentProvider(JSON.toJSONBytes(configVo)),"application/json").send()
-            .getContentAsString();
-            log.info("setConfig result = {}",result);
-        }catch (Exception e){
-            log.error("",e);
+            String result = httpClient.POST(requestUrl).content(new BytesContentProvider(JSON.toJSONBytes(configVo)), "application/json").send()
+                    .getContentAsString();
+            log.info("setConfig result = {}", result);
+        } catch (Exception e) {
+            log.error("", e);
         }
         return new ApiResponse<>(false);
 
