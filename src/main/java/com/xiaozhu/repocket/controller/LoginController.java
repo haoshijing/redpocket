@@ -27,7 +27,7 @@ public class LoginController {
 
 
     @PostMapping("/login")
-    public ApiResponse<LoginResponse> login(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request){
+    public ApiResponse<LoginResponse> login(@RequestBody UserLoginRequest userLoginRequest){
         LoginResponse loginResponse = new LoginResponse();
 
         String name = userLoginRequest.getName();
