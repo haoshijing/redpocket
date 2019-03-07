@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RequestMapping("/config")
+@RequestMapping("/api/config")
 @RestController
 @Slf4j
 public class ConfigController {
