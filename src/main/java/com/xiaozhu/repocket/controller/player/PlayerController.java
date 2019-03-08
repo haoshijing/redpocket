@@ -95,7 +95,8 @@ public class PlayerController extends BaseQueryRemoteController {
             }
             updateObject.put("BindGuid", modifyPlayerReq.getBindGuid());
 
-            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject)))
+            String result = httpClient.POST(getRequestUrl("modify_playerinfo"))
+                    .content(new BytesContentProvider(JSON.toJSONBytes(updateObject)))
                     .send().getContentAsString();
 
             JSONObject jsonObject = JSON.parseObject(result);
