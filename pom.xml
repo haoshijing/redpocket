@@ -157,7 +157,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <includeSystemScope>true</includeSystemScope>
-                    <mainClass>com.nc.study.ApplicationStarter</mainClass>
+                    <mainClass>com.xiaozhu.repocket.ApplicationStarter</mainClass>
                 </configuration>
 
                 <executions>
