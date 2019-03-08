@@ -6,6 +6,7 @@
 
 package com.xiaozhu.repocket.controller.room;
 
+import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 2019-03-07
  */
 @RestController
-@RequestMapping("/api/room")
-public class RoomController {
+@RequestMapping("/room")
+public class RoomController extends BaseQueryRemoteController {
 }
