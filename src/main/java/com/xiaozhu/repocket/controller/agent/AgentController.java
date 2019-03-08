@@ -52,6 +52,7 @@ public class AgentController extends BaseQueryRemoteController {
                     PageDataBean<PlayerDataVo> pageDataBean = new PageDataBean<>();
                     pageDataBean.setDatas(baseRemoteData.getData());
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
+                    return new ApiResponse<>(pageDataBean);
                 }
             }
         } catch (Exception e) {

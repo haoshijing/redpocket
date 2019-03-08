@@ -23,5 +23,6 @@ public class PlayerListVo {
     private String TotalPay;        //总支出
     private String TotalGain;    //总收入
     private String CreateTime;    //注册时间
+    private String showIsAgent;
 
 }

@@ -7,14 +7,18 @@
 package com.xiaozhu.repocket.controller.player;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xiaozhu.repocket.base.BaseRemoteData;
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import com.xiaozhu.repocket.controller.request.agent.AgentQueryRequest;
+import com.xiaozhu.repocket.controller.request.player.PlayerQueryParam;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
 import com.xiaozhu.repocket.controller.response.PlayerDataVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.Lists;
 import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,8 +36,51 @@ import java.util.List;
 @Slf4j
 public class PlayerController extends BaseQueryRemoteController {
 
+    @PostMapping("/queryMemberSetUp")
+    public ApiResponse<List<JSONObject>> queryMemberSetUp(@RequestBody PlayerQueryParam playerQueryParam) {
+        JSONObject queryObject = new JSONObject();
+        String guid = playerQueryParam.getGuid();
+        String account = playerQueryParam.getAccount();
 
-    @PostMapping("/queryPlayerList")
+        if (StringUtils.isNotEmpty(guid)) {
+            queryObject.put("QueryType", "1");
+            queryObject.put("GuidOrAccount", guid);
+        } else if (StringUtils.isNotEmpty(account)) {
+            queryObject.put("QueryType", "2");
+            queryObject.put("GuidOrAccount", account);
+        } else {
+            return new ApiResponse<>(Lists.newArrayList());
+        }
+
+        try {
+            String result = httpClient.POST(getRequestUrl("query_playerinfo"))
+                    .content(new BytesContentProvider(queryObject.toJSONString().getBytes()))
+                    .send().getContentAsString();
+            if (StringUtils.isNotEmpty(result)) {
+                BaseRemoteData<JSONArray> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
+                if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
+                    List<JSONObject> datas = Lists.newArrayList();
+                    for (int i = 0; i < baseRemoteData.getData().size(); i++) {
+                        JSONObject data = baseRemoteData.getData().getJSONObject(i);
+                        if (data.getBoolean("IsAgent")) {
+                            data.put("showIsAgent", "Yes");
+                        } else {
+                            data.put("showIsAgent", "No");
+                        }
+                        datas.add(data);
+                    }
+                    return new ApiResponse<>(datas);
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("", e);
+        }
+        return new ApiResponse<>(Lists.newArrayList());
+    }
+
+
+    @PostMapping("/queryPlayerData")
     public ApiResponse<PageDataBean<PlayerDataVo>> queryAgentData(@RequestBody AgentQueryRequest request) {
         JSONObject queryObject = new JSONObject();
         Integer data = (request.getPage() - 1) * request.getLimit();
@@ -43,14 +90,15 @@ public class PlayerController extends BaseQueryRemoteController {
             String result = httpClient.POST(getRequestUrl("query_playerinfolist"))
                     .content(new BytesContentProvider(queryObject.toJSONString().getBytes()))
                     .send().getContentAsString();
-            log.info("result = {}", result);
             BaseRemoteData<List<PlayerDataVo>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
             if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
                 if (baseRemoteData.getData().size() > 0) {
                     PageDataBean<PlayerDataVo> pageDataBean = new PageDataBean<>();
                     pageDataBean.setDatas(baseRemoteData.getData());
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
+                    return new ApiResponse<>(pageDataBean);
                 }
+
             }
         } catch (Exception e) {
             log.error("", e);
