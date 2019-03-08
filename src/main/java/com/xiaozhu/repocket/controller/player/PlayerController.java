@@ -85,7 +85,7 @@ public class PlayerController extends BaseQueryRemoteController {
         JSONObject updateObject = new JSONObject();
         try {
             updateObject.put("QueryType", 1);
-            updateObject.put("AccountOrGuid", modifyPlayerReq.getGuid());
+            updateObject.put("GuidOrAccount", modifyPlayerReq.getGuid());
             updateObject.put("Password", modifyPlayerReq.getPassword());
             updateObject.put("Money", modifyPlayerReq.getMoney());
             if (StringUtils.equalsIgnoreCase(modifyPlayerReq.getShowIsAgent(), "Yes")) {
