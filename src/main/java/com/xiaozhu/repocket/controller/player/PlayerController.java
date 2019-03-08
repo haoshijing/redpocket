@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xiaozhu.repocket.base.BaseRemoteData;
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import com.xiaozhu.repocket.controller.request.agent.AgentQueryRequest;
+import com.xiaozhu.repocket.controller.request.player.ModifyPlayerReq;
 import com.xiaozhu.repocket.controller.request.player.PlayerQueryParam;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
@@ -77,6 +78,32 @@ public class PlayerController extends BaseQueryRemoteController {
             log.error("", e);
         }
         return new ApiResponse<>(Lists.newArrayList());
+    }
+
+    @PostMapping("/updatePlayer")
+    public ApiResponse<Boolean> updatePlayer(@RequestBody ModifyPlayerReq modifyPlayerReq) {
+        JSONObject updateObject = new JSONObject();
+        try {
+            updateObject.put("QueryType", 1);
+            updateObject.put("AccountOrGuid", modifyPlayerReq.getGuid());
+            updateObject.put("Password", modifyPlayerReq.getPassword());
+            updateObject.put("Money", modifyPlayerReq.getMoney());
+            if (StringUtils.equalsIgnoreCase(modifyPlayerReq.getShowIsAgent(), "Yes")) {
+                updateObject.put("IsAgent", true);
+            } else {
+                updateObject.put("IsAgent", false);
+            }
+            updateObject.put("BindGuid", modifyPlayerReq.getBindGuid());
+
+            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject)))
+                    .send().getContentAsString();
+
+            JSONObject jsonObject = JSON.parseObject(result);
+            return new ApiResponse<>(true);
+
+        } catch (Exception e) {
+            return new ApiResponse<>(false);
+        }
     }
 
 
