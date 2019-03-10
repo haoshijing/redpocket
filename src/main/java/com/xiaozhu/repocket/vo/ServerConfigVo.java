@@ -8,8 +8,8 @@ import javax.persistence.Table;
 @Data
 @ToString
 public class ServerConfigVo {
-    private String Address;
-    private String Version;
+    private String address;
+    private String version;
     private String updateMessage;
     private String notice;
     private String scrollMessage;
@@ -19,7 +19,7 @@ public class ServerConfigVo {
     private String soundDownLoadUrl;
     private String wXShareUrl;
     private String resourceDownLoadUrl;
-    private Integer CreateDefaultMoney;
+    private Integer createDefaultMoney;
     private Integer onlineCount;
     private Integer registerCount;
 }
