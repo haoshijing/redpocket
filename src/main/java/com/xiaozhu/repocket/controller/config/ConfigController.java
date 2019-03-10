@@ -28,8 +28,8 @@ public class ConfigController {
     @Value("${queryServerHost}")
     private String queryServerHost;
 
-    @PostMapping("/show")
-    public ApiResponse<ServerConfigVo> queryConfig() {
+    @PostMapping("/queryConfig")
+    public ApiResponse<List<ServerConfigVo>> queryConfig() {
         final String requestUrl =
                 new StringBuilder(queryServerHost).append("/query_serverdata").toString();
         try {
@@ -37,7 +37,7 @@ public class ConfigController {
             BaseRemoteData<List<ServerConfigVo>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
             if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
                 if (baseRemoteData.getData().size() > 0) {
-                    return new ApiResponse<>(baseRemoteData.getData().get(0));
+                    return new ApiResponse<>(baseRemoteData.getData());
                 }
             }
         } catch (Exception e) {

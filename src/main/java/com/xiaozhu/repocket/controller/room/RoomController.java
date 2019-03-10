@@ -43,7 +43,7 @@ public class RoomController extends BaseQueryRemoteController {
             String result = httpClient.POST(getRequestUrl("roominfolist"))
                     .content(new BytesContentProvider(queryObject.toJSONString().getBytes()))
                     .send().getContentAsString();
-            log.info("result = {}", result);
+            log.info("queryRoomData result = {}", result);
             BaseRemoteData<List<JSONObject>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
             if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
                 if (baseRemoteData.getData().size() > 0) {
