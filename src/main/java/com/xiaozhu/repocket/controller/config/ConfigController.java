@@ -9,10 +9,7 @@ import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.vo.ServerConfigVo;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
-import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.util.BytesContentProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +20,10 @@ import java.util.List;
 @RequestMapping("/api/config")
 @RestController
 @Slf4j
-public class ConfigController  extends BaseQueryRemoteController {
+public class ConfigController extends BaseQueryRemoteController {
 
 
-    @PostMapping("/queryConfig")
+    @PostMapping("/obtainData")
     public ApiResponse<List<JSONObject>> queryConfig() {
         try {
             String result = httpClient.GET("query_serverdata").getContentAsString();
