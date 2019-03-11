@@ -1,11 +1,14 @@
 package com.xiaozhu.redpokcet.test;
 
+import com.alibaba.fastjson.JSONObject;
 import com.xiaozhu.repocket.controller.config.ConfigController;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.vo.ServerConfigVo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 
 public class ConfigControllerTest extends BaseApiTest {
@@ -15,7 +18,7 @@ public class ConfigControllerTest extends BaseApiTest {
 
     @Test
     public void testShow() {
-        ApiResponse<ServerConfigVo> apiResponse = configController.queryConfig();
+        ApiResponse<List<JSONObject>> apiResponse = configController.queryConfig();
 
         Assert.assertTrue(apiResponse.getCode() == 200);
 
@@ -34,7 +37,7 @@ public class ConfigControllerTest extends BaseApiTest {
 
         System.out.println(apiResponse.getData());
 
-        ApiResponse<ServerConfigVo> serverConfigVoApiResponse = configController.queryConfig();
+        ApiResponse<List<JSONObject>> serverConfigVoApiResponse = configController.queryConfig();
 
         Assert.assertTrue(serverConfigVoApiResponse.getCode() == 200);
 

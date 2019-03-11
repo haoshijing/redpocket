@@ -24,10 +24,9 @@ public class RechargeRecordRepositoryTest extends BaseApiTest {
 
     @Test
     public void testPageQuery() {
-        PageRequest pageRequest = PageRequest.of(1, 1);
+        PageRequest pageRequest = PageRequest.of(1, 10);
         Page<RechargeRecordsPo> page = rechargeRecordRepository.findAll(pageRequest);
-
-        System.out.println(page.getTotalElements());
+        System.out.println(page.getContent());
     }
 
     @Test
