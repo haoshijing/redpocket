@@ -27,7 +27,7 @@ public class ConfigController extends BaseQueryRemoteController {
     @GetMapping("/obtainData")
     public ApiResponse<List<JSONObject>> queryConfig() {
         try {
-            String result = httpClient.GET("query_serverdata").getContentAsString();
+            String result = httpClient.GET(getRequestUrl("query_serverdata")).getContentAsString();
             BaseRemoteData<List<JSONObject>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
             if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
                 if (baseRemoteData.getData().size() > 0) {
