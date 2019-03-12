@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/robot")
@@ -112,16 +114,12 @@ public class RobotController extends BaseQueryRemoteController {
      */
     @PostMapping("/createRobotsToGroup")
     public ApiResponse<Boolean> createRobotsToGroup(@RequestBody RobotsToGroupRequest request) {
-        JSONObject updateObject = new JSONObject();
 
         try {
-//            updateObject.put("Nick", 1);
-//            updateObject.put("HeadId", );
-//            updateObject.put("InitMoney", );
-//            updateObject.put("WinPercent", );
-
-            String result = httpClient.POST(getRequestUrl("addrobots")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
-
+            String result = httpClient.POST(getRequestUrl("addrobots"))
+                    .content(new BytesContentProvider(JSON.toJSON(request.getData()).toString()))
+                    .send()
+                    .getContentAsString();
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
                 return new ApiResponse<>(true);
@@ -132,7 +130,6 @@ public class RobotController extends BaseQueryRemoteController {
         } catch (Exception e) {
             return new ApiResponse<>(false);
         }
-
     }
 
 }

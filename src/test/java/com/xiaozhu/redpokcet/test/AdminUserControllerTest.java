@@ -24,7 +24,7 @@ public class AdminUserControllerTest extends BaseApiTest {
         admin.setUsername("name");
         admin.setPassword("password");
         admin.setCreateTime(num1);
-        admin.setLastOperator(222);
+        admin.setLastOperator("222");
         System.out.println(adminRepository.save(admin));
     }
 }

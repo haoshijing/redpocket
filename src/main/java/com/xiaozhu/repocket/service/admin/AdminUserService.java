@@ -50,7 +50,7 @@ public class AdminUserService {
         AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
         AdminUserPo admin = new AdminUserPo();
         admin.setUsername(request.getUsername());
-        admin.setPassword(request.getPassword());
+        admin.setPassword(MD5Util.md5(request.getPassword()));
         admin.setCreateTime(System.currentTimeMillis());
         admin.setCreateId(adminAuthInfo.getUserName());
         admin.setLastOperator(adminAuthInfo.getUserName());
