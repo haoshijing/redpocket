@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
 import org.eclipse.jetty.client.util.BytesContentProvider;
+import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,8 @@ public class PlayerController extends BaseQueryRemoteController {
                         } else {
                             data.put("showIsAgent", "No");
                         }
+                        Long createTime = data.getLongValue("CreateTime");
+                        data.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
                         datas.add(data);
                     }
                     return new ApiResponse<>(datas);
@@ -109,7 +112,7 @@ public class PlayerController extends BaseQueryRemoteController {
 
 
     @PostMapping("/queryPlayerData")
-    public ApiResponse<PageDataBean<PlayerDataVo>> queryAgentData(@RequestBody AgentQueryRequest request) {
+    public ApiResponse<PageDataBean<JSONObject>> queryAgentData(@RequestBody AgentQueryRequest request) {
         JSONObject queryObject = new JSONObject();
         Integer data = (request.getPage() - 1) * request.getLimit();
         queryObject.put("Index", data);
@@ -118,11 +121,15 @@ public class PlayerController extends BaseQueryRemoteController {
             String result = httpClient.POST(getRequestUrl("query_playerinfolist"))
                     .content(new BytesContentProvider(queryObject.toJSONString().getBytes()))
                     .send().getContentAsString();
-            BaseRemoteData<List<PlayerDataVo>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
+            BaseRemoteData<List<JSONObject>> baseRemoteData = JSON.parseObject(result, BaseRemoteData.class);
             if (baseRemoteData != null && baseRemoteData.getCode() == 0) {
                 if (baseRemoteData.getData().size() > 0) {
-                    PageDataBean<PlayerDataVo> pageDataBean = new PageDataBean<>();
+                    PageDataBean<JSONObject> pageDataBean = new PageDataBean<>();
                     pageDataBean.setDatas(baseRemoteData.getData());
+                    pageDataBean.getDatas().forEach(jsonObject -> {
+                        Long createTime = jsonObject.getLongValue("CreateTime");
+                        jsonObject.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
+                    });
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
                     return new ApiResponse<>(pageDataBean);
                 }

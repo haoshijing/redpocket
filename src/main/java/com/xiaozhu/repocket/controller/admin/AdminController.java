@@ -47,18 +47,22 @@ public class AdminController extends BaseQueryRemoteController {
     }
 
     @PostMapping("/createAdminData")
-    public ApiResponse<String> createAdminData(@RequestBody AdminCreateRequest request) {
+    public ApiResponse<Boolean> createAdminData(@RequestBody AdminCreateRequest request) {
         if (StringUtils.isEmpty(request.getPassword()) || StringUtils.isEmpty(request.getUsername())) {
-            return new ApiResponse<String>(500, "参数错误", "参数错误");
+            return new ApiResponse(500, "Param Error", false);
         }
 
         try {
-            adminUserService.createAdminData(request);
+
+          boolean createOk =   adminUserService.createAdminData(request);
+          if(!createOk){
+              return new ApiResponse(500, "Username Exist", false);
+          }
+          return new ApiResponse<>(true);
         } catch (Exception e) {
-            return new ApiResponse<>(e.getMessage());
+            return new ApiResponse(500, "Param Error", false);
         }
 
-        return new ApiResponse<String>("ok");
     }
 
 

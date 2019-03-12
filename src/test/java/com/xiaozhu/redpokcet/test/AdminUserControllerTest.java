@@ -13,7 +13,7 @@ public class AdminUserControllerTest extends BaseApiTest {
 
     @Test
     public void testQuery() {
-        System.out.println(adminRepository.deleteByIdAndUsername(2,"admin1111"));
+        System.out.println(adminRepository.deleteByUsername("admin1111"));
     }
 
     @Test

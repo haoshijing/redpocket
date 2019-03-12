@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,26 +28,37 @@ public class AdminUserService {
         if (adminUserPo != null) {
             String encryptPwd = MD5Util.md5(password);
             if (StringUtils.equalsIgnoreCase(encryptPwd, adminUserPo.getPassword())) {
+                adminRepository.updateLoginTime(name,System.currentTimeMillis());
                 return true;
             }
         }
+
+
         return false;
     }
 
     public Page<AdminUserPo> queryAdminData(BaseQueryRequest request) {
-        PageRequest pageRequest = PageRequest.of((request.getPage() - 1) * request.getLimit(), request.getLimit());
+        PageRequest pageRequest = PageRequest.of((request.getPage() - 1) * request.getLimit(),
+                request.getLimit());
+        pageRequest.getSort().descending().getOrderFor("id");
+
         return adminRepository.findAll(pageRequest);
     }
 
     public Boolean delAdminData(AdminDelRequest request) {
-        Integer is_del = adminRepository.deleteByIdAndUsername(request.getId(), request.getUsername());
+        Integer is_del = adminRepository.deleteByUsername(request.getUsername());
         if (is_del == 0) {
             return false;
         }
         return true;
     }
 
-    public void createAdminData(AdminCreateRequest request) {
+    public boolean createAdminData(AdminCreateRequest request) {
+
+        AdminUserPo queryPo = adminRepository.findByUsername(request.getUsername());
+        if(queryPo != null){
+            return false;
+        }
 
         AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
         AdminUserPo admin = new AdminUserPo();
@@ -54,7 +67,7 @@ public class AdminUserService {
         admin.setCreateTime(System.currentTimeMillis());
         admin.setCreateId(adminAuthInfo.getUserName());
         admin.setLastOperator(adminAuthInfo.getUserName());
-        adminRepository.save(admin);
-
+        adminRepository.saveAndFlush(admin);
+        return true;
     }
 }

@@ -44,10 +44,27 @@ public class ConfigController extends BaseQueryRemoteController {
     @PostMapping("/setConfig")
     public ApiResponse<Boolean> setConfig(@RequestBody ServerConfigVo configVo) {
         try {
-            String result = httpClient.POST(getRequestUrl("modify_serverdata")).content(new BytesContentProvider(JSON.toJSONBytes(configVo)),
+
+            JSONObject updateJson = new JSONObject();
+            updateJson.put("Version", configVo.getVersion());
+            updateJson.put("AndroidUpdateUrl", configVo.getAndroidUpdateUrl());
+            updateJson.put("CreateDefaultMoney", configVo.getCreateDefaultMoney());
+            updateJson.put("IOSUpdateUrl", configVo.getIOSUpdateUrl());
+            updateJson.put("Notice", configVo.getNotice());
+            updateJson.put("ScrollMessage", configVo.getScrollMessage());
+            updateJson.put("SoundDownLoadUrl", configVo.getSoundDownLoadUrl());
+            updateJson.put("SoundUpLoadUrl", configVo.getSoundUpLoadUrl());
+            updateJson.put("WXShareUrl", configVo.getWXShareUrl());
+            updateJson.put("ResourceDownLoadUrl", configVo.getResourceDownLoadUrl());
+            updateJson.put("UpdateMessage", configVo.getUpdateMessage());
+
+
+            String result = httpClient.POST(getRequestUrl("modify_serverdata"))
+                    .content(new BytesContentProvider(JSON.toJSONBytes(configVo)),
                     "application/json").send()
                     .getContentAsString();
             log.info("setConfig result = {}", result);
+            return new ApiResponse<>(true);
         } catch (Exception e) {
             log.error("", e);
         }

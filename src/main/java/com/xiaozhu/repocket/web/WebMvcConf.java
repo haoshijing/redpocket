@@ -30,8 +30,7 @@ public class WebMvcConf extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(processInterceptor).addPathPatterns("/**");
         registry.addInterceptor(authInterceptor).addPathPatterns("/**").
-                excludePathPatterns("/user/login")
-                .excludePathPatterns("/user/logout");
+                excludePathPatterns("/user/login");
     }
 
     @Override
