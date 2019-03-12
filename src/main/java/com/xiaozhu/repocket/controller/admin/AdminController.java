@@ -2,6 +2,7 @@ package com.xiaozhu.repocket.controller.admin;
 
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import com.xiaozhu.repocket.controller.request.BaseQueryRequest;
+import com.xiaozhu.repocket.controller.request.admin.AdminCreateRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminDelRequest;
 import com.xiaozhu.repocket.controller.request.recharge.RechargeRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
@@ -44,6 +45,22 @@ public class AdminController extends BaseQueryRemoteController {
             return new ApiResponse<String>("ok");
         }
         return new ApiResponse<>("error");
+    }
+
+    @PostMapping("/createAdminData")
+    public ApiResponse<String> createAdminData(@RequestBody AdminCreateRequest request)
+    {
+        if (request.getPassword() == null || request.getUsername() == null) {
+            return new ApiResponse<String>(500,"参数错误","参数错误");
+        }
+
+        try {
+            adminUserService.createAdminData(request);
+        } catch (Exception e) {
+            return new ApiResponse<>(e.getMessage());
+        }
+
+        return new ApiResponse<String>("ok");
     }
 
 

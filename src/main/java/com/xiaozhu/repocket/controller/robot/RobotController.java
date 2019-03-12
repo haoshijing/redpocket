@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.xiaozhu.repocket.base.BaseRemoteData;
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
-import com.xiaozhu.repocket.controller.request.robot.RobotConfigRequest;
-import com.xiaozhu.repocket.controller.request.robot.RobotCreateEditRequest;
-import com.xiaozhu.repocket.controller.request.robot.RobotQueryRequest;
+import com.xiaozhu.repocket.controller.request.robot.*;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
 import lombok.extern.slf4j.Slf4j;
@@ -102,5 +100,35 @@ public class RobotController extends BaseQueryRemoteController {
         }
     }
 
+    /**
+     * 批量创建 机器人
+     * @param request
+     * @return
+     */
+    @PostMapping("/createRobotsToGroup")
+    public ApiResponse<Boolean> createRobotsToGroup(@RequestBody RobotsToGroupRequest request)
+    {
+        JSONObject updateObject = new JSONObject();
+
+        try {
+//            updateObject.put("Nick", 1);
+//            updateObject.put("HeadId", );
+//            updateObject.put("InitMoney", );
+//            updateObject.put("WinPercent", );
+
+            String result = httpClient.POST(getRequestUrl("addrobots")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
+
+            JSONObject jsonObject = JSON.parseObject(result);
+            if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
+                return new ApiResponse<>(true);
+            } else {
+                return new ApiResponse<>(false);
+            }
+
+        } catch (Exception e) {
+            return new ApiResponse<>(false);
+        }
+
+    }
 
 }

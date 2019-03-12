@@ -2,6 +2,7 @@ package com.xiaozhu.repocket.service.admin;
 
 
 import com.xiaozhu.repocket.controller.request.BaseQueryRequest;
+import com.xiaozhu.repocket.controller.request.admin.AdminCreateRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminDelRequest;
 import com.xiaozhu.repocket.controller.request.recharge.RechargeRequest;
 import com.xiaozhu.repocket.po.AdminUserPo;
@@ -41,5 +42,17 @@ public class AdminUserService {
             return false;
         }
         return true;
+    }
+
+    public void createAdminData (AdminCreateRequest request)
+    {
+
+        AdminUserPo admin = new AdminUserPo();
+        admin.setUsername(request.getUsername());
+        admin.setPassword(request.getPassword());
+        admin.setCreateTime(System.currentTimeMillis());
+        admin.setLastOperator(1);
+        adminRepository.save(admin);
+
     }
 }
