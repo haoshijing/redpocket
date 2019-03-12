@@ -12,7 +12,6 @@ import java.util.List;
  * @date 3/12/19 2:56 PM
  **/
 @Data
-public class RobotsToGroupRequest<RobotRequest>
-{
+public class RobotsToGroupRequest {
     private List<RobotRequest> data;
 }

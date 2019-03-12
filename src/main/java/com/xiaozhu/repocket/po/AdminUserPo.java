@@ -2,7 +2,11 @@ package com.xiaozhu.repocket.po;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Data
@@ -15,8 +19,8 @@ public class AdminUserPo implements Serializable {
     private String username;
     private String password;
     private Long createTime;
-    private Integer createId;
+    private String createId;
     private Long lastUpdateTime;
-    private Integer lastOperator;
+    private String lastOperator;
     private Long lastLoginTime;
 }

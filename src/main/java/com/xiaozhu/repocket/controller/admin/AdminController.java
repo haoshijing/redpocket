@@ -4,13 +4,12 @@ import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import com.xiaozhu.repocket.controller.request.BaseQueryRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminCreateRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminDelRequest;
-import com.xiaozhu.repocket.controller.request.recharge.RechargeRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
 import com.xiaozhu.repocket.po.AdminUserPo;
-import com.xiaozhu.repocket.po.RmoneyChangeRecordsPo;
 import com.xiaozhu.repocket.service.admin.AdminUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,10 +47,9 @@ public class AdminController extends BaseQueryRemoteController {
     }
 
     @PostMapping("/createAdminData")
-    public ApiResponse<String> createAdminData(@RequestBody AdminCreateRequest request)
-    {
-        if (request.getPassword() == null || request.getUsername() == null) {
-            return new ApiResponse<String>(500,"参数错误","参数错误");
+    public ApiResponse<String> createAdminData(@RequestBody AdminCreateRequest request) {
+        if (StringUtils.isEmpty(request.getPassword()) || StringUtils.isEmpty(request.getUsername())) {
+            return new ApiResponse<String>(500, "参数错误", "参数错误");
         }
 
         try {
@@ -62,7 +60,6 @@ public class AdminController extends BaseQueryRemoteController {
 
         return new ApiResponse<String>("ok");
     }
-
 
 
 }

@@ -10,8 +10,7 @@ import lombok.Data;
  * @date 3/12/19 3:01 PM
  **/
 @Data
-public class RobotRequest
-{
+public class RobotRequest {
     private String nickname;
     private String avatar;
     private Integer money;

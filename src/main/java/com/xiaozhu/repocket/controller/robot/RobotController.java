@@ -1,14 +1,16 @@
 package com.xiaozhu.repocket.controller.robot;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.xiaozhu.repocket.base.BaseRemoteData;
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
-import com.xiaozhu.repocket.controller.request.robot.*;
+import com.xiaozhu.repocket.controller.request.robot.RobotConfigRequest;
+import com.xiaozhu.repocket.controller.request.robot.RobotQueryRequest;
+import com.xiaozhu.repocket.controller.request.robot.RobotsToGroupRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.client.util.BytesContentProvider;
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,15 +56,17 @@ public class RobotController extends BaseQueryRemoteController {
     }
 
     @PostMapping("/createRobot")
-    public ApiResponse<Boolean> createRobot(@RequestBody RobotConfigRequest request) {
-        JSONObject updateObject = new JSONObject();
+    public ApiResponse<Boolean> createRobot(@RequestBody RobotsToGroupRequest request) {
+        JSONArray jsonArray = new JSONArray();
         try {
-            updateObject.put("QueryType", 1);
-            updateObject.put("Guid", request.getGuid());
-            updateObject.put("InitMoney", request.getInitMoney());
-            updateObject.put("WinPercent", request.getWinPercent());
+            request.getData().forEach(robotRequest -> {
+                JSONObject data = new JSONObject();
+                data.put("QueryType", 1);
+                jsonArray.add(data);
+            });
 
-            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
+
+            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(jsonArray))).send().getContentAsString();
 
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
@@ -102,12 +106,12 @@ public class RobotController extends BaseQueryRemoteController {
 
     /**
      * 批量创建 机器人
+     *
      * @param request
      * @return
      */
     @PostMapping("/createRobotsToGroup")
-    public ApiResponse<Boolean> createRobotsToGroup(@RequestBody RobotsToGroupRequest request)
-    {
+    public ApiResponse<Boolean> createRobotsToGroup(@RequestBody RobotsToGroupRequest request) {
         JSONObject updateObject = new JSONObject();
 
         try {
