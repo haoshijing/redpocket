@@ -60,8 +60,8 @@ public class ConfigController extends BaseQueryRemoteController {
 
 
             String result = httpClient.POST(getRequestUrl("modify_serverdata"))
-                    .content(new BytesContentProvider(JSON.toJSONBytes(configVo)),
-                    "application/json").send()
+                    .content(new BytesContentProvider(JSON.toJSONBytes(updateJson)),
+                            "application/json").send()
                     .getContentAsString();
             log.info("setConfig result = {}", result);
             return new ApiResponse<>(true);
