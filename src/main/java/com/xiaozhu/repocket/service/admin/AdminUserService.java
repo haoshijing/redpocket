@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,7 @@ public class AdminUserService {
         if (adminUserPo != null) {
             String encryptPwd = MD5Util.md5(password);
             if (StringUtils.equalsIgnoreCase(encryptPwd, adminUserPo.getPassword())) {
-                adminRepository.updateLoginTime(name,System.currentTimeMillis());
+                adminRepository.updateLoginTime(name, System.currentTimeMillis());
                 return true;
             }
         }
@@ -38,9 +37,9 @@ public class AdminUserService {
     }
 
     public Page<AdminUserPo> queryAdminData(BaseQueryRequest request) {
+        Sort sort = Sort.by("id").descending();
         PageRequest pageRequest = PageRequest.of((request.getPage() - 1) * request.getLimit(),
-                request.getLimit());
-        pageRequest.getSort().descending().getOrderFor("id");
+                request.getLimit(), sort);
 
         return adminRepository.findAll(pageRequest);
     }
@@ -56,7 +55,7 @@ public class AdminUserService {
     public boolean createAdminData(AdminCreateRequest request) {
 
         AdminUserPo queryPo = adminRepository.findByUsername(request.getUsername());
-        if(queryPo != null){
+        if (queryPo != null) {
             return false;
         }
 
