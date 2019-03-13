@@ -17,7 +17,7 @@ public class RmoneyChangeRecordsPo implements Serializable
     private String DateTime;
 
     @Column(name = "Guid")
-    private Long Guid;
+    private Long guid;
 
     @Column(name = "Nick")
     private String Nick;

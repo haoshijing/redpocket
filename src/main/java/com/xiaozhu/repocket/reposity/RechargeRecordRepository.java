@@ -7,7 +7,13 @@
 package com.xiaozhu.repocket.reposity;
 
 import com.xiaozhu.repocket.po.RechargeRecordsPo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 /**
  * @author haoshijing
@@ -15,4 +21,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface RechargeRecordRepository extends JpaRepository<RechargeRecordsPo, String> {
     RechargeRecordsPo findAllByOrderId(String orderId);
+    Page<RechargeRecordsPo> findByGuid(Long guid, Pageable pageable);
 }

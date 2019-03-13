@@ -1,6 +1,7 @@
 package com.xiaozhu.repocket.controller.recharge;
 
 import com.alibaba.fastjson.JSONObject;
+import com.xiaozhu.repocket.controller.request.recharge.QueryRmoneyChangeRequest;
 import com.xiaozhu.repocket.controller.request.recharge.RechargeRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
@@ -28,7 +29,6 @@ public class RechargeController {
     public ApiResponse<PageDataBean> queryRechargeData(@RequestBody RechargeRequest request) {
 
         Page<RechargeRecordsPo> page = rechargeService.queryRechargeData(request);
-
         PageDataBean<RechargeRecordsPo> pageDataBean = new PageDataBean<>();
         pageDataBean.setDatas(page.getContent());
         pageDataBean.setTotalCount(page.getTotalPages());
@@ -37,10 +37,9 @@ public class RechargeController {
     }
 
     @PostMapping("/queryRmoneyChangeData")
-    public ApiResponse<PageDataBean> queryRmoneyChangeData(@RequestBody RechargeRequest request) {
+    public ApiResponse<PageDataBean> queryRmoneyChangeData(@RequestBody QueryRmoneyChangeRequest request) {
 
         Page<RmoneyChangeRecordsPo> page = rechargeService.queryRmoneyChangeData(request);
-
         PageDataBean<RmoneyChangeRecordsPo> pageDataBean = new PageDataBean<>();
         pageDataBean.setDatas(page.getContent());
         pageDataBean.setTotalCount(page.getTotalPages());
