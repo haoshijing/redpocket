@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/robot")
@@ -92,7 +90,8 @@ public class RobotController extends BaseQueryRemoteController {
             updateObject.put("InitMoney", request.getInitMoney());
             updateObject.put("WinPercent", request.getWinPercent());
 
-            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
+            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).
+                    content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
 
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
