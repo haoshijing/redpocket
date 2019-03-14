@@ -11,7 +11,6 @@ import lombok.Data;
  * @date 3/13/19 11:54 AM
  **/
 @Data
-public class QueryRmoneyChangeRequest extends BaseQueryRequest
-{
+public class QueryRmoneyChangeRequest extends BaseQueryRequest {
     private Long guid;
 }

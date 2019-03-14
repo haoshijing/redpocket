@@ -14,20 +14,20 @@ public class RmoneyChangeRecordsPo implements Serializable
 {
     @Column(name = "DateTime")
     @Id
-    private String DateTime;
+    private String dateTime;
 
     @Column(name = "Guid")
     private Long guid;
 
     @Column(name = "Nick")
-    private String Nick;
+    private String nick;
 
     @Column(name = "Reason")
-    private String Reason;
+    private String reason;
 
     @Column(name = "Changes")
-    private Long Changes;
+    private Long changes;
 
     @Column(name = "Remains")
-    private Long Remains;
+    private Long remains;
 }

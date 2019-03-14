@@ -35,8 +35,12 @@ public class RAccountRecordsPo implements Serializable {
     @Column(name = "RoomID")
     private Integer roomId;
 
+    @Column(name = "PlayerID")
+    private Long guid;
+
     @Column(name = "Round")
     private Integer round;
+
 
     @Column(name = "GameRules")
     private String gameRules;
