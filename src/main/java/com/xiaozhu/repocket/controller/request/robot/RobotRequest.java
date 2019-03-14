@@ -11,7 +11,7 @@ import lombok.Data;
  **/
 @Data
 public class RobotRequest {
-    private String nickname;
+    private String nick;
     private String avatar;
     private Integer money;
     private Integer win;

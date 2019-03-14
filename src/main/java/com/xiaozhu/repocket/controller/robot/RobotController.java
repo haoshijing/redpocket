@@ -7,6 +7,7 @@ import com.xiaozhu.repocket.base.BaseRemoteData;
 import com.xiaozhu.repocket.controller.BaseQueryRemoteController;
 import com.xiaozhu.repocket.controller.request.robot.RobotConfigRequest;
 import com.xiaozhu.repocket.controller.request.robot.RobotQueryRequest;
+import com.xiaozhu.repocket.controller.request.robot.RobotRequest;
 import com.xiaozhu.repocket.controller.request.robot.RobotsToGroupRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/robot")
@@ -55,21 +58,24 @@ public class RobotController extends BaseQueryRemoteController {
         return new ApiResponse<>(new PageDataBean<>());
     }
 
-    @PostMapping("/createRobot")
-    public ApiResponse<Boolean> createRobot(@RequestBody RobotsToGroupRequest request) {
+    @PostMapping("/createRobotPlayer")
+    public ApiResponse<Boolean> createRobot(@RequestBody RobotRequest request) {
         JSONArray jsonArray = new JSONArray();
         try {
-            request.getData().forEach(robotRequest -> {
-                JSONObject data = new JSONObject();
-                data.put("QueryType", 1);
-                jsonArray.add(data);
-            });
 
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("Nick", request.getNick());
+            jsonObject.put("HeadId", request.getAvatar());
+            jsonObject.put("InitMoney", request.getMoney());
+            jsonObject.put("WinPercent", request.getWin());
+            jsonArray.add(jsonObject);
 
-            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).content(new BytesContentProvider(JSON.toJSONBytes(jsonArray))).send().getContentAsString();
+            String result = httpClient.POST(getRequestUrl("addrobots"))
+                    .content(new BytesContentProvider(JSON.toJSONBytes(jsonArray))).send().getContentAsString();
 
-            JSONObject jsonObject = JSON.parseObject(result);
-            if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
+            log.info("createRobotPlayer request = {}, result = {}",request, result);
+            JSONObject data = JSON.parseObject(result);
+            if (data != null && data.containsKey("Code") && data.getIntValue("Code") == 0) {
                 return new ApiResponse<>(true);
             } else {
                 return new ApiResponse<>(false);
@@ -90,9 +96,8 @@ public class RobotController extends BaseQueryRemoteController {
             updateObject.put("InitMoney", request.getInitMoney());
             updateObject.put("WinPercent", request.getWinPercent());
 
-            String result = httpClient.POST(getRequestUrl("modify_playerinfo")).
-                    content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
-
+            String result = httpClient.POST(getRequestUrl("modify_robotconfig")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
+            log.info("updateRobotConfig request = {}, result = {}",request, result);
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
                 return new ApiResponse<>(true);

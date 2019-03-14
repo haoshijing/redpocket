@@ -103,11 +103,20 @@ public class PlayerController extends BaseQueryRemoteController {
                     .send().getContentAsString();
 
             JSONObject jsonObject = JSON.parseObject(result);
-            return new ApiResponse<>(true);
+
+            Integer code = jsonObject.getIntValue("Code");
+            if(code == 0) {
+                return new ApiResponse<>(true);
+            }else if(code == 10002 ){
+                return new ApiResponse(200,"Agent Can't bind",false);
+            }else if(code == 10003 ){
+                return new ApiResponse(200,"Can't bind self",false);
+            }
 
         } catch (Exception e) {
-            return new ApiResponse<>(false);
+
         }
+        return new ApiResponse<>(false);
     }
 
 
