@@ -3,15 +3,15 @@ package com.xiaozhu.repocket.controller;
 
 import com.google.common.collect.Lists;
 import com.xiaozhu.repocket.base.ThreadContext;
+import com.xiaozhu.repocket.controller.request.login.UserUpdatePwdRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.user.UserDataResponse;
+import com.xiaozhu.repocket.service.admin.AdminUserService;
 import com.xiaozhu.repocket.service.auth.AdminAuthCacheService;
 import com.xiaozhu.repocket.service.auth.AdminAuthInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 public class UserInfoController {
     @Autowired
     private AdminAuthCacheService adminAuthCacheService;
+
+    @Autowired
+    private AdminUserService adminUserService;
 
     @GetMapping("/info")
     public ApiResponse<UserDataResponse> getUserInfo(HttpServletRequest request){
@@ -39,5 +42,15 @@ public class UserInfoController {
         adminAuthCacheService.deleteToken(adminAuthInfo.getToken());
         return new ApiResponse<>(true);
 
+    }
+
+    @PostMapping("/updatePwd")
+    public ApiResponse<Boolean> updatePwd(@RequestBody UserUpdatePwdRequest request){
+        if(StringUtils.isEmpty(request.getNewPwd()) || StringUtils.isEmpty(request.getOldPwd())){
+            return new ApiResponse(500,"Param Error",false);
+        }
+
+
+        return new ApiResponse(adminUserService.updatePwd(request));
     }
 }

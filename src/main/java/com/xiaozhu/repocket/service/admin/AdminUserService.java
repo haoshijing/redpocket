@@ -5,6 +5,7 @@ import com.xiaozhu.repocket.base.ThreadContext;
 import com.xiaozhu.repocket.controller.request.BaseQueryRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminCreateRequest;
 import com.xiaozhu.repocket.controller.request.admin.AdminDelRequest;
+import com.xiaozhu.repocket.controller.request.login.UserUpdatePwdRequest;
 import com.xiaozhu.repocket.po.AdminUserPo;
 import com.xiaozhu.repocket.reposity.AdminRepository;
 import com.xiaozhu.repocket.service.auth.AdminAuthInfo;
@@ -68,5 +69,11 @@ public class AdminUserService {
         admin.setLastOperator(adminAuthInfo.getUserName());
         adminRepository.saveAndFlush(admin);
         return true;
+    }
+
+    public Integer updatePwd(UserUpdatePwdRequest request) {
+        AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
+
+        return 1;
     }
 }
