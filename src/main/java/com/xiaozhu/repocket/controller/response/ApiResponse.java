@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * api报文结构
+ *
  * @param <T>
  */
 @Data
@@ -14,16 +15,17 @@ public class ApiResponse<T> {
     private String msg;
     private T data;
 
-    public ApiResponse(){
+    public ApiResponse() {
         this.code = RetCode.OK;
     }
 
-    public ApiResponse(T data){
+    public ApiResponse(T data) {
         this.code = RetCode.OK;
-        this.msg = "执行成功";
+        this.msg = "Succ";
         this.data = data;
     }
-    public ApiResponse(Integer code,String msg,T data){
+
+    public ApiResponse(Integer code, String msg, T data) {
         this.code = code;
         this.msg = msg;
         this.data = data;

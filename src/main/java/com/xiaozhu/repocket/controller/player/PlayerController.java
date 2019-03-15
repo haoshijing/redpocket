@@ -112,6 +112,10 @@ public class PlayerController extends BaseQueryRemoteController {
                 return new ApiResponse(200, "Can't bind self", false);
             } else if (code == 10001) {
                 return new ApiResponse(200, "Agent Not Exist", false);
+            } else if (code == 10012) {
+                return new ApiResponse(200, "Bind Guid Is not Agent", false);
+            } else if (code == 10013) {
+                return new ApiResponse(200, "Robot Not Exist", false);
             }
 
         } catch (Exception e) {
