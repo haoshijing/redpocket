@@ -38,7 +38,7 @@ public class RecordController {
     public ApiResponse<PageDataBean<RAccountRecordsPo>> queryRAccountRecords(@RequestBody QueryRmoneyChangeRequest request) {
 
         PageDataBean<RAccountRecordsPo> pageDataBean = new PageDataBean<>();
-        Sort sort = Sort.by("date").descending().and(Sort.by("time").descending());
+        Sort sort = Sort.by("date").descending();
 
         PageRequest pageRequest = PageRequest.of((request.getPage() - 1),
                 request.getLimit(), sort);

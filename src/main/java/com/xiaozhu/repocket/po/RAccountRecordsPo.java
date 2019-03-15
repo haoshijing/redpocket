@@ -24,8 +24,11 @@ import java.io.Serializable;
 @Table(name = "raccount_records")
 @Entity
 public class RAccountRecordsPo implements Serializable {
-    @Column(name = "Date")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "Date")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String date;
 

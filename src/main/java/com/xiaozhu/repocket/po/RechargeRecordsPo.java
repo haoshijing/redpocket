@@ -27,8 +27,11 @@ import java.sql.Timestamp;
 @Entity
 @ToString
 public class RechargeRecordsPo implements Serializable {
-    @Column(name = "order_id")
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
+    @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String orderId;
 
