@@ -65,7 +65,7 @@ public class RobotController extends BaseQueryRemoteController {
             jsonObject.put("Nick", request.getNick());
             jsonObject.put("HeadId", request.getAvatar());
             jsonObject.put("InitMoney", request.getMoney());
-            jsonObject.put("WinPercent", request.getWin());
+            jsonObject.put("Winpermillage", request.getWin());
             jsonArray.add(jsonObject);
 
             String result = httpClient.POST(getRequestUrl("addrobots"))
@@ -86,7 +86,7 @@ public class RobotController extends BaseQueryRemoteController {
                             return new ApiResponse(200, "Nick Exist", false);
                         }
                         if (errorCode == 10011) {
-                            return new ApiResponse(200, "Account Exist", false);
+                            return new ApiResponse(200, "Account Not Exist", false);
                         }
                     }
                 }
@@ -106,7 +106,7 @@ public class RobotController extends BaseQueryRemoteController {
             updateObject.put("QueryType", 1);
             updateObject.put("Guid", request.getGuid());
             updateObject.put("InitMoney", request.getInitMoney());
-            updateObject.put("WinPercent", request.getWinPercent());
+            updateObject.put("Winpermillage", request.getWinPercent());
 
             String result = httpClient.POST(getRequestUrl("modify_robotconfig")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
             log.info("updateRobotConfig request = {}, result = {}", request, result);
