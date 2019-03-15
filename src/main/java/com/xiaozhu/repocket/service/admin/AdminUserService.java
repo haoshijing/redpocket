@@ -39,7 +39,7 @@ public class AdminUserService {
 
     public Page<AdminUserPo> queryAdminData(BaseQueryRequest request) {
         Sort sort = Sort.by("id").descending();
-        PageRequest pageRequest = PageRequest.of((request.getPage() - 1) * request.getLimit(),
+        PageRequest pageRequest = PageRequest.of((request.getPage() - 1),
                 request.getLimit(), sort);
 
         return adminRepository.findAll(pageRequest);
