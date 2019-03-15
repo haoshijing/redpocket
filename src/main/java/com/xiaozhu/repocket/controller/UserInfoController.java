@@ -11,7 +11,11 @@ import com.xiaozhu.repocket.service.auth.AdminAuthCacheService;
 import com.xiaozhu.repocket.service.auth.AdminAuthInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,7 +29,7 @@ public class UserInfoController {
     private AdminUserService adminUserService;
 
     @GetMapping("/info")
-    public ApiResponse<UserDataResponse> getUserInfo(HttpServletRequest request){
+    public ApiResponse<UserDataResponse> getUserInfo(HttpServletRequest request) {
         AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
         UserDataResponse response = new UserDataResponse();
         response.setAvatar("https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
@@ -37,7 +41,7 @@ public class UserInfoController {
 
 
     @PostMapping("/logout")
-    public ApiResponse<Boolean> logout(){
+    public ApiResponse<Boolean> logout() {
         AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
         adminAuthCacheService.deleteToken(adminAuthInfo.getToken());
         return new ApiResponse<>(true);
@@ -45,12 +49,16 @@ public class UserInfoController {
     }
 
     @PostMapping("/updatePwd")
-    public ApiResponse<Boolean> updatePwd(@RequestBody UserUpdatePwdRequest request){
-        if(StringUtils.isEmpty(request.getNewPwd()) || StringUtils.isEmpty(request.getOldPwd())){
-            return new ApiResponse(500,"Param Error",false);
+    public ApiResponse<Boolean> updatePwd(@RequestBody UserUpdatePwdRequest request) {
+        if (StringUtils.isEmpty(request.getNewPwd()) || StringUtils.isEmpty(request.getOldPwd())) {
+            return new ApiResponse(200, "Param Error", false);
+        }
+        Integer updateRet = adminUserService.updatePwd(request);
+        if (updateRet == 1) {
+            return new ApiResponse(true);
+        } else {
+            return new ApiResponse(200, "Old Password Error", false);
         }
 
-
-        return new ApiResponse(adminUserService.updatePwd(request));
     }
 }

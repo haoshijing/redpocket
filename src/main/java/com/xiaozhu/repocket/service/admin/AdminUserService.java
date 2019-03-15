@@ -73,7 +73,10 @@ public class AdminUserService {
 
     public Integer updatePwd(UserUpdatePwdRequest request) {
         AdminAuthInfo adminAuthInfo = (AdminAuthInfo) ThreadContext.getCurrentAdmin();
+        String name = adminAuthInfo.getUserName();
+        String oldPassword = MD5Util.md5(request.getOldPwd());
+        String newPassword = MD5Util.md5(request.getNewPwd());
 
-        return 1;
+        return adminRepository.updatePassword(name, newPassword, oldPassword);
     }
 }

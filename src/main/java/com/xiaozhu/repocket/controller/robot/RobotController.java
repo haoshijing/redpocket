@@ -19,9 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/robot")
@@ -73,17 +71,31 @@ public class RobotController extends BaseQueryRemoteController {
             String result = httpClient.POST(getRequestUrl("addrobots"))
                     .content(new BytesContentProvider(JSON.toJSONBytes(jsonArray))).send().getContentAsString();
 
-            log.info("createRobotPlayer request = {}, result = {}",request, result);
+            log.info("createRobotPlayer request = {}, result = {}", request, result);
             JSONObject data = JSON.parseObject(result);
-            if (data != null && data.containsKey("Code") && data.getIntValue("Code") == 0) {
-                return new ApiResponse<>(true);
-            } else {
-                return new ApiResponse<>(false);
+
+            if (data != null) {
+                Integer code = data.getIntValue("Code");
+                if (code == 0) {
+                    return new ApiResponse<>(true);
+                } else if (code == 10009) {
+                    JSONObject jsonData = data.getJSONArray("Data").getJSONObject(0);
+                    if (jsonData != null) {
+                        Integer errorCode = jsonData.getInteger("Code");
+                        if (errorCode == 10010) {
+                            return new ApiResponse(200, "Nick Exist", false);
+                        }
+                        if (errorCode == 10011) {
+                            return new ApiResponse(200, "Account Exist", false);
+                        }
+                    }
+                }
             }
 
         } catch (Exception e) {
-            return new ApiResponse<>(false);
+            log.error("", e);
         }
+        return new ApiResponse<>(false);
     }
 
 
@@ -97,7 +109,7 @@ public class RobotController extends BaseQueryRemoteController {
             updateObject.put("WinPercent", request.getWinPercent());
 
             String result = httpClient.POST(getRequestUrl("modify_robotconfig")).content(new BytesContentProvider(JSON.toJSONBytes(updateObject))).send().getContentAsString();
-            log.info("updateRobotConfig request = {}, result = {}",request, result);
+            log.info("updateRobotConfig request = {}, result = {}", request, result);
             JSONObject jsonObject = JSON.parseObject(result);
             if (jsonObject != null && jsonObject.containsKey("Code") && jsonObject.getIntValue("Code") == 0) {
                 return new ApiResponse<>(true);
