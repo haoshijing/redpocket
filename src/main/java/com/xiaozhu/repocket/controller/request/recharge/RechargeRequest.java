@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class RechargeRequest extends BaseQueryRequest {
-    private Long guid;
+    private Long playerId;
 }

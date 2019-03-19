@@ -12,5 +12,9 @@ import lombok.Data;
  **/
 @Data
 public class QueryRmoneyChangeRequest extends BaseQueryRequest {
-    private Long guid;
+    private Long playerId;
+    private Integer roomId;
+    private Long roomGuid;
+    private String nick;
+    private String reason;
 }

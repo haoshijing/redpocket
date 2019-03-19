@@ -54,7 +54,8 @@ public class AgentController extends BaseQueryRemoteController {
                     pageDataBean.setDatas(baseRemoteData.getData());
                     pageDataBean.getDatas().forEach(jsonObject -> {
                         Long createTime = jsonObject.getLongValue("CreateTime");
-                        jsonObject.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
+                        jsonObject.put("CreateTime", new DateTime(createTime).plusHours(-8)
+                                .toString("yyyy-MM-dd HH:mm:ss"));
                     });
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
                     return new ApiResponse<>(pageDataBean);

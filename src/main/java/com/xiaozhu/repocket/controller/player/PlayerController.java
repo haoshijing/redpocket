@@ -69,7 +69,7 @@ public class PlayerController extends BaseQueryRemoteController {
                             data.put("showIsAgent", "No");
                         }
                         Long createTime = data.getLongValue("CreateTime");
-                        data.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
+                        data.put("CreateTime", new DateTime(createTime).plusHours(-8).toString("yyyy-MM-dd HH:mm:ss"));
                         datas.add(data);
                     }
                     return new ApiResponse<>(datas);
@@ -142,7 +142,7 @@ public class PlayerController extends BaseQueryRemoteController {
                     pageDataBean.setDatas(baseRemoteData.getData());
                     pageDataBean.getDatas().forEach(jsonObject -> {
                         Long createTime = jsonObject.getLongValue("CreateTime");
-                        jsonObject.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
+                        jsonObject.put("CreateTime", new DateTime(createTime).plusHours(-8).toString("yyyy-MM-dd HH:mm:ss"));
                     });
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
                     return new ApiResponse<>(pageDataBean);

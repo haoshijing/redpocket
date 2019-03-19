@@ -6,4 +6,6 @@ import lombok.Data;
 public class BaseQueryRequest {
     private Integer page;
     private Integer limit;
+    private Long start;
+    private Long end;
 }

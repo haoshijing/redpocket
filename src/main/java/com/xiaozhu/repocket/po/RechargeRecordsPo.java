@@ -48,5 +48,5 @@ public class RechargeRecordsPo implements Serializable {
     private String rechargeGold;
 
     @Column(name = "create_time")
-    private Timestamp createTime;
+    private String createTime;
 }

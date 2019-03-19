@@ -43,7 +43,7 @@ public class RobotController extends BaseQueryRemoteController {
                     PageDataBean<JSONObject> pageDataBean = new PageDataBean<>();
                     baseRemoteData.getData().forEach(jsonObject -> {
                         Long createTime = jsonObject.getLong("CreateTime");
-                        jsonObject.put("CreateTime", new DateTime(createTime).toString("yyyy-MM-dd HH:mm:ss"));
+                        jsonObject.put("CreateTime", new DateTime(createTime).plusHours(-8).toString("yyyy-MM-dd HH:mm:ss"));
                     });
                     pageDataBean.setDatas(baseRemoteData.getData());
                     pageDataBean.setTotalCount(baseRemoteData.getTotalCount());
