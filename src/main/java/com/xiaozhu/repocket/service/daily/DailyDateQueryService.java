@@ -12,6 +12,7 @@ public class DailyDateQueryService {
     @Autowired
     private ReAccountRecordRepository reAccountRecordRepository;
 
+
     public Long querySumBetAmount(String date){
         Long amount = reAccountRecordRepository.querySumTotalBetAmount(date);
         if(amount == null){
