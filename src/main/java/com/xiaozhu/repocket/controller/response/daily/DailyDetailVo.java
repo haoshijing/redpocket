@@ -4,9 +4,10 @@ import lombok.Data;
 
 @Data
 public class DailyDetailVo {
+    private String date;
     private Long sumBetAmount;
     private Long sumSystemEatChips;
     private Long sumCommissionAmount;
-    private Long sumRoomCount;
+    private Integer sumRoomCount;
     private Long sumPlayerCount;
 }

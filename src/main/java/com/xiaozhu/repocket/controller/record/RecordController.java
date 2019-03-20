@@ -4,6 +4,7 @@ import com.xiaozhu.repocket.controller.request.recharge.QueryRmoneyChangeRequest
 import com.xiaozhu.repocket.controller.request.recharge.RechargeRequest;
 import com.xiaozhu.repocket.controller.response.ApiResponse;
 import com.xiaozhu.repocket.controller.response.PageDataBean;
+import com.xiaozhu.repocket.controller.response.recharge.RechargeTotalVo;
 import com.xiaozhu.repocket.po.RAccountRecordsPo;
 import com.xiaozhu.repocket.po.RechargeRecordsPo;
 import com.xiaozhu.repocket.po.RmoneyChangeRecordsPo;
@@ -23,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -42,6 +46,9 @@ public class RecordController {
 
     @Autowired
     private ReAccountRecordRepository reAccountRecordRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @PostMapping("/queryRAccountRecords")
     public ApiResponse<PageDataBean<RAccountRecordsPo>> queryRAccountRecords(@RequestBody QueryRmoneyChangeRequest request) {
@@ -59,6 +66,54 @@ public class RecordController {
         pageDataBean.setTotalCount(Integer.valueOf(String.valueOf(page.getTotalElements())));
 
         return new ApiResponse<>(pageDataBean);
+    }
+
+    @PostMapping("/queryRechargeSum")
+    public ApiResponse<RechargeTotalVo> queryRechargeSum(@RequestBody RechargeRequest request) {
+
+        RechargeTotalVo rechargeTotalVo = new RechargeTotalVo();
+
+        StringBuilder stringBuilder = new StringBuilder("select sum(recharge_money) as totalRechargeMoney , sum(recharge_gold) as totalRechargeGold")
+                .append(" from recharge_records re where 1 = 1 ");
+        String startDate = "";
+        String endDate = "";
+        if (request.getStart() > 0) {
+            DateTime dateTime = new DateTime(request.getStart());
+            startDate = dateTime.toString("yyyy/MM/dd");
+        }
+        if (request.getEnd() > 0) {
+            DateTime dateTime = new DateTime(request.getEnd());
+            endDate = dateTime.toString("yyyy/MM/dd");
+        }
+        if (request.getPlayerId() != null) {
+            stringBuilder.append(" AND guid = ").append(request.getPlayerId());
+        }
+
+        if (StringUtils.isNotEmpty(startDate)) {
+            stringBuilder.append(" AND CreateTime >= '").append(startDate).append("' ");
+        }
+
+        if (StringUtils.isNotEmpty(endDate)) {
+            stringBuilder.append(" AND CreateTime <='").append(endDate).append("' ");
+        }
+
+        Query query = entityManager.createNativeQuery(stringBuilder.toString());
+        Object object = query.getSingleResult();
+        Object[] datas = (Object[]) object;
+        Long reMoney = 0L;
+        Long reGold = 0L;
+        if (datas[0] != null) {
+            BigDecimal b = (BigDecimal) datas[0];
+            reMoney = b.longValue();
+        }
+        if (datas[1] != null) {
+            BigDecimal b = (BigDecimal) datas[0];
+            reGold = b.longValue();
+        }
+        rechargeTotalVo.setTotalRechargeGold(reGold);
+        rechargeTotalVo.setTotalRechargeMoney(reMoney);
+
+        return new ApiResponse<>(rechargeTotalVo);
     }
 
     @PostMapping("/queryRechargeData")
@@ -103,24 +158,24 @@ public class RecordController {
                 String startDate = "";
                 String endDate = "";
 
-                if(request.getStart() > 0){
+                if (request.getStart() > 0) {
                     DateTime dateTime = new DateTime(request.getStart());
                     startDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(request.getEnd() > 0){
+                if (request.getEnd() > 0) {
                     DateTime dateTime = new DateTime(request.getEnd());
                     endDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(request.getPlayerId() != null){
-                    predicate.add(cb.equal(root.get("guid").as(Long.class),request.getPlayerId()));
+                if (request.getPlayerId() != null) {
+                    predicate.add(cb.equal(root.get("guid").as(Long.class), request.getPlayerId()));
                 }
 
-                if(StringUtils.isNotEmpty(startDate)){
-                    predicate.add(cb.greaterThanOrEqualTo(root.get("createTime").as(String.class),startDate));
+                if (StringUtils.isNotEmpty(startDate)) {
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("createTime").as(String.class), startDate));
                 }
 
-                if(StringUtils.isNotEmpty(endDate)){
-                    predicate.add(cb.lessThanOrEqualTo(root.get("createTime").as(String.class),endDate));
+                if (StringUtils.isNotEmpty(endDate)) {
+                    predicate.add(cb.lessThanOrEqualTo(root.get("createTime").as(String.class), endDate));
                 }
 
                 Predicate[] pre = new Predicate[predicate.size()];
@@ -137,30 +192,30 @@ public class RecordController {
                 String startDate = "";
                 String endDate = "";
 
-                if(request.getStart() > 0){
+                if (request.getStart() > 0) {
                     DateTime dateTime = new DateTime(request.getStart());
                     startDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(request.getEnd() > 0){
+                if (request.getEnd() > 0) {
                     DateTime dateTime = new DateTime(request.getEnd());
                     endDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(StringUtils.isNotEmpty(request.getNick())){
-                    predicate.add(cb.equal(root.get("nick").as(String.class),request.getNick()));
+                if (StringUtils.isNotEmpty(request.getNick())) {
+                    predicate.add(cb.equal(root.get("nick").as(String.class), request.getNick()));
                 }
-                if(StringUtils.isNotEmpty(request.getReason())){
-                    predicate.add(cb.equal(root.get("reason").as(String.class),request.getReason()));
+                if (StringUtils.isNotEmpty(request.getReason())) {
+                    predicate.add(cb.equal(root.get("reason").as(String.class), request.getReason()));
                 }
-                if(request.getPlayerId() != null){
-                    predicate.add(cb.equal(root.get("guid").as(Long.class),request.getPlayerId()));
-                }
-
-                if(StringUtils.isNotEmpty(startDate)){
-                    predicate.add(cb.greaterThanOrEqualTo(root.get("dateTime").as(String.class),startDate));
+                if (request.getPlayerId() != null) {
+                    predicate.add(cb.equal(root.get("guid").as(Long.class), request.getPlayerId()));
                 }
 
-                if(StringUtils.isNotEmpty(endDate)){
-                    predicate.add(cb.lessThanOrEqualTo(root.get("dateTime").as(String.class),endDate));
+                if (StringUtils.isNotEmpty(startDate)) {
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("dateTime").as(String.class), startDate));
+                }
+
+                if (StringUtils.isNotEmpty(endDate)) {
+                    predicate.add(cb.lessThanOrEqualTo(root.get("dateTime").as(String.class), endDate));
                 }
 
                 Predicate[] pre = new Predicate[predicate.size()];
@@ -177,30 +232,30 @@ public class RecordController {
                 String startDate = "";
                 String endDate = "";
 
-                if(request.getStart() > 0){
+                if (request.getStart() > 0) {
                     DateTime dateTime = new DateTime(request.getStart());
                     startDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(request.getEnd() > 0){
+                if (request.getEnd() > 0) {
                     DateTime dateTime = new DateTime(request.getEnd());
                     endDate = dateTime.toString("yyyy/MM/dd");
                 }
-                if(request.getPlayerId() != null){
-                    predicate.add(cb.equal(root.get("guid").as(Long.class),request.getPlayerId()));
+                if (request.getPlayerId() != null) {
+                    predicate.add(cb.equal(root.get("guid").as(Long.class), request.getPlayerId()));
                 }
-                if(request.getRoomId() != null){
-                    predicate.add(cb.equal(root.get("roomId").as(Integer.class),request.getRoomId()));
+                if (request.getRoomId() != null) {
+                    predicate.add(cb.equal(root.get("roomId").as(Integer.class), request.getRoomId()));
                 }
-                if(request.getRoomGuid() != null){
-                    predicate.add(cb.equal(root.get("roomGuid").as(Long.class),request.getRoomGuid()));
-                }
-
-                if(StringUtils.isNotEmpty(startDate)){
-                    predicate.add(cb.greaterThanOrEqualTo(root.get("date").as(String.class),startDate));
+                if (request.getRoomGuid() != null) {
+                    predicate.add(cb.equal(root.get("roomGuid").as(Long.class), request.getRoomGuid()));
                 }
 
-                if(StringUtils.isNotEmpty(endDate)){
-                    predicate.add(cb.lessThanOrEqualTo(root.get("date").as(String.class),endDate));
+                if (StringUtils.isNotEmpty(startDate)) {
+                    predicate.add(cb.greaterThanOrEqualTo(root.get("date").as(String.class), startDate));
+                }
+
+                if (StringUtils.isNotEmpty(endDate)) {
+                    predicate.add(cb.lessThanOrEqualTo(root.get("date").as(String.class), endDate));
                 }
 
                 Predicate[] pre = new Predicate[predicate.size()];
