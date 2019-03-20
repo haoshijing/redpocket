@@ -28,7 +28,7 @@ public class DailyController {
         Long end = request.getEnd();
         List<DailyDetailVo> detailVos = Lists.newArrayList();
         if (start != null && start > 0 && end != null && end > 0) {
-            for (Long i = end + DateUtils.MILLIS_PER_DAY; i >= start; i -= DateUtils.MILLIS_PER_DAY) {
+            for (Long i = end; i >= start; i -= DateUtils.MILLIS_PER_DAY) {
                 String date = new DateTime(i).toString("yyyy/MM/dd");
                 DailyDetailVo detailVo = dailyDateQueryService.queryDailyDetail(date);
                 detailVos.add(detailVo);
