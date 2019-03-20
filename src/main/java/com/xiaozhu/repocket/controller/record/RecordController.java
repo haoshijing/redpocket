@@ -90,11 +90,11 @@ public class RecordController {
         }
 
         if (StringUtils.isNotEmpty(startDate)) {
-            stringBuilder.append(" AND CreateTime >= '").append(startDate).append("' ");
+            stringBuilder.append(" AND create_time >= '").append(startDate).append("' ");
         }
 
         if (StringUtils.isNotEmpty(endDate)) {
-            stringBuilder.append(" AND CreateTime <='").append(endDate).append("' ");
+            stringBuilder.append(" AND create_time <='").append(endDate).append("' ");
         }
 
         Query query = entityManager.createNativeQuery(stringBuilder.toString());
@@ -107,7 +107,7 @@ public class RecordController {
             reMoney = b.longValue();
         }
         if (datas[1] != null) {
-            BigDecimal b = (BigDecimal) datas[0];
+            BigDecimal b = (BigDecimal) datas[1];
             reGold = b.longValue();
         }
         rechargeTotalVo.setTotalRechargeGold(reGold);
